@@ -1,0 +1,19 @@
+class Solution {
+    public boolean isPalindrome(int x) {
+        // Negative numbers & numbers ending in 0 but not zero
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+
+        int reversed = 0;
+
+        // Reverse half the digits
+        while (x > reversed) {
+            reversed = reversed * 10 + x % 10;
+            x /= 10;
+        }
+
+        // For odd digit count, remove middle digit from reversed
+        return x == reversed || x == reversed / 10;
+    }
+}
