@@ -1,0 +1,46 @@
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+
+        // DP table
+        boolean[][] dp = new boolean[m + 1][n + 1];
+
+        // Empty pattern matches empty string
+        dp[0][0] = true;
+
+        // Initialize for patterns like a*, a*b*, a*b*c*
+        for (int j = 1; j < n; j++) {
+            if (p.charAt(j) == '*' && dp[0][j - 1]) {
+                dp[0][j + 1] = true;
+            }
+        }
+
+        // Fill DP table
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+
+                // Case 1: Direct match or '.'
+                if (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.') {
+                    dp[i + 1][j + 1] = dp[i][j];
+                }
+
+                // Case 2: Pattern has '*'
+                else if (p.charAt(j) == '*') {
+                    // previous pattern character
+                    char prev = p.charAt(j - 1);
+
+                    // Option 1: Zero occurrence of previous character
+                    dp[i + 1][j + 1] = dp[i + 1][j - 1];
+
+                    // Option 2: One or more occurrences if matches
+                    if (prev == '.' || prev == s.charAt(i)) {
+                        dp[i + 1][j + 1] |= dp[i][j + 1];
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+}
